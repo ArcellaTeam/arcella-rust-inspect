@@ -1,0 +1,23 @@
+# arcella-rust-inspect
+[workspace]
+resolver = "2"
+members = [
+    "arcella-inspect"
+]
+
+[workspace.package]
+publish = false
+authors = ["Alexey Rybakov", "ArcellaTeam"]
+edition = "2021"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/ArcellaTeam/arcella-rust-inspect/"
+
+[workspace.dependencies]
+clap = { version = "4", features = ["derive"] }
+quote = "1"
+proc-macro2 = { version = "1.0", features = ["span-locations"] }
+serde = { version = "1", features = ["derive", "rc"] }
+serde_yaml_ng = "0.10"
+syn = { version = "2", features = ["full", "visit", "extra-traits"] }
+toml = "0.9.8"
+walkdir = "2"
