@@ -95,7 +95,7 @@ subprojects:
             line: 12
 ```
 
-👉 See the full [**output format specification**](FORMAT.md) for details.
+👉 See the full [**output format specification**](../FORMAT.md) for details.
 
 ---
 
@@ -144,8 +144,8 @@ subprojects:
 
 ## 📚 Documentation
 
-- [Output Format (English)](FORMAT.md)
-- [Output Format (Russian)](FORMAT-ru.md)
+- [Output Format (English)](../FORMAT.md)
+- [Output Format (Russian)](../FORMAT-ru.md)
 
 ---
 
@@ -166,6 +166,3 @@ Planned improvements:
 - Integration with `rust-analyzer` LSP for real-time analysis
 
 ---
-
-> Built with ❤️ by the **arcella-team**  
-> Part of the **Arcella Local Management Extensions (ALME)** initiative
