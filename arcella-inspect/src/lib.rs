@@ -47,7 +47,7 @@
 //!
 //! ## Output Format
 //!
-//! See the full specification in [`FORMAT.md`](https://github.com/arcella-team/arcella-inspect/blob/main/FORMAT.md).
+//! See the full specification in [`FORMAT.md`](https://github.com/ArcellaTeam/arcella-rust-inspect/blob/main/FORMAT.md).
 //!
 //! ## Design Notes
 //!
