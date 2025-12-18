@@ -27,13 +27,13 @@
 //!
 //! ### As a library
 //!
-//! ```rust
+//! ```rust,no_run
 //! use arcella_inspect::{analyze_project, analysis_to_yaml};
 //! use std::path::Path;
 //!
 //! let root = Path::new("./my-rust-project");
-//! let analysis = analyze_project(root)?;
-//! let yaml = analysis_to_yaml(&analysis, root)?;
+//! let analysis = analyze_project(root).unwrap();
+//! let yaml = analysis_to_yaml(&analysis, root).unwrap();
 //! println!("{}", yaml);
 //! ```
 //!
@@ -101,11 +101,11 @@ pub use data::{
 ///
 /// # Example
 ///
-/// ```rust
+/// ```rust,no_run
 /// use arcella_inspect::analyze_project;
 /// use std::path::Path;
 ///
-/// let analysis = analyze_project(Path::new("./examples/hello-world"))?;
+/// let analysis = analyze_project(Path::new("./examples/hello-world")).unwrap();
 /// println!("Found {} functions", analysis.functions.len());
 /// ```
 pub fn analyze_project(root: &Path) -> Result<AnalysisResult, Box<dyn std::error::Error>> {
@@ -136,13 +136,13 @@ pub fn analyze_project(root: &Path) -> Result<AnalysisResult, Box<dyn std::error
 ///
 /// # Example
 ///
-/// ```rust
+/// ```rust,no_run
 /// use arcella_inspect::{analyze_project, analysis_to_yaml};
 /// use std::path::Path;
 ///
 /// let root = Path::new("./my-crate");
-/// let analysis = analyze_project(root)?;
-/// let yaml = analysis_to_yaml(&analysis, root)?;
+/// let analysis = analyze_project(root).unwrap();
+/// let yaml = analysis_to_yaml(&analysis, root).unwrap();
 /// assert!(yaml.contains("version: \"1.0\""));
 /// ```
 pub fn analysis_to_yaml(
