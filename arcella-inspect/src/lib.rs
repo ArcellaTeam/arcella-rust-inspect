@@ -56,6 +56,8 @@
 //! - Supports **Cargo workspaces** (each crate = subproject).
 //! - External calls (e.g. from `std`, `tokio`) are marked with `external: true`.
 
+use quote::quote;
+use serde_yaml_ng as serde_yaml;
 use std::{
     collections::HashMap,
     fs,
@@ -70,8 +72,6 @@ use syn::{
     FnArg, Pat, Type, ReturnType, Expr, ExprCall, ExprMethodCall, ExprPath,
 };
 use walkdir::{WalkDir, DirEntry};
-use quote::quote;
-use serde_yaml_ng as serde_yaml;
 
 // =============== PUBLIC API ===============
 
@@ -790,4 +790,69 @@ fn read_crate_name(cargo_toml_path: &Path) -> String {
         .and_then(|n| n.as_str())
         .map(|s| s.to_string())
         .unwrap_or_else(|| "unknown".to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use syn::parse_quote;
+
+    #[test]
+    fn test_is_meaningful_call() {
+        assert!(is_meaningful_call("validate_token"));
+        assert!(is_meaningful_call("std::time::sleep"));
+        assert!(!is_meaningful_call("unwrap"));
+        assert!(!is_meaningful_call("x"));
+        assert!(!is_meaningful_call("ok"));
+        assert!(is_meaningful_call("x::y")); // содержит :: → значимо
+    }
+
+    #[test]
+    fn test_path_to_string() {
+        let path = syn::parse_str::<syn::Path>("auth::validator::check").unwrap();
+        assert_eq!(path_to_string(&path), "auth::validator::check");
+    }
+
+    #[test]
+    fn test_extract_docstring() {
+        let attrs = vec![
+            syn::parse_quote!(#[doc = "First line"]),
+            syn::parse_quote!(#[doc = "Second line"]),
+        ];
+        assert_eq!(
+            extract_docstring(&attrs),
+            Some("First line\nSecond line".to_string())
+        );
+    }
+
+    #[test]
+    fn test_extract_attributes_from_fn() {
+        let item_fn: syn::ItemFn = syn::parse_str(
+            r#"#[test]
+            #[instrument]
+            pub async unsafe fn demo() {}"#
+        ).unwrap();
+        let attrs = extract_attributes_from_fn(&item_fn);
+        assert!(attrs.contains(&"#[test]".to_string()));
+        assert!(attrs.contains(&"#[instrument]".to_string()));
+        assert!(attrs.contains(&"pub".to_string()));
+        assert!(attrs.contains(&"async".to_string()));
+        assert!(attrs.contains(&"unsafe".to_string()));
+    }
+
+    #[test]
+    fn test_format_parameters_regular() {
+        let arg1: syn::FnArg = parse_quote!(a: i32);
+        let arg2: syn::FnArg = parse_quote!(b: &str);
+
+        let mut inputs = syn::punctuated::Punctuated::new();
+        inputs.push(arg1);
+        inputs.push(arg2);        
+
+        let params = format_parameters(&inputs);
+        assert_eq!(params.len(), 2);
+        assert!(params[0].starts_with("a: "));
+        assert!(params[1].starts_with("b: "));
+    }
+
 }
