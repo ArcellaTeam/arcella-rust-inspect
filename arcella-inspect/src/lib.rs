@@ -415,7 +415,11 @@ fn extract_docstring(attrs: &[Attribute]) -> Option<String> {
                     ..
                 }) = &namevalue.value
                 {
-                    lines.push(lit.value());
+                    let mut s = lit.value();
+                    if s.starts_with(' ') {
+                        s = s[1..].to_string();
+                    }
+                    lines.push(s);
                 }
             }
             Meta::List(meta_list) => {
